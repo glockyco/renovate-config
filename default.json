@@ -1,12 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Shared dependency policy for glockyco repositories",
-  "extends": ["config:recommended", "group:allNonMajor"],
+  "extends": ["config:recommended"],
   "timezone": "Europe/Vienna",
   "schedule": ["* * * * 6"],
   "dependencyDashboard": true,
   "automerge": false,
-  "rebaseWhen": "conflicted",
   "prConcurrentLimit": 5,
   "prHourlyLimit": 2,
   "lockFileMaintenance": {
