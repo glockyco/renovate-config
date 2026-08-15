@@ -1,0 +1,33 @@
+schema: spec-driven
+
+context: |
+  This repository publishes the shared Renovate preset for Oh My Pi repositories.
+  Each consuming repository owns its toolchain and updater choices.
+  This preset owns reusable Renovate defaults only: generic safety, scheduling,
+  dependency dashboard behavior, pull request concurrency, manual merge policy,
+  and lock file maintenance.
+  Consuming repositories own project-specific managers, update grouping, labels,
+  release age, security handling, and toolchain updater configuration.
+  Use clean cutovers. Do not add compatibility presets or fallback lock files.
+
+rules:
+  proposal:
+    - State the shared-policy boundary, goals, non-goals, and migration boundary.
+    - Do not add consuming-project rules to the shared preset.
+  design:
+    - Define each shared Renovate default and its ownership boundary.
+    - Explain how consuming repositories add project-specific policy.
+  specs:
+    - Express observable Renovate configuration behavior with testable scenarios.
+  tasks:
+    - Group work into atomic implementation and verification tasks.
+    - Include consumer audit and obsolete-rule cleanup.
+
+operations:
+  apply:
+    guidance:
+      - Implement the shared preset before adding consuming-repository policy.
+      - Validate the changed preset and its current consumers before publication.
+  archive:
+    guidance:
+      - Archive only after the preset and consumer policy match the specification.
