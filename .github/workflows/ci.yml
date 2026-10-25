@@ -26,3 +26,14 @@ jobs:
       - uses: DeterminateSystems/determinate-nix-action@v3
       - name: Validate OpenSpec artifacts
         run: nix build --no-link ".#checks.$(nix eval --raw --impure --expr builtins.currentSystem).openspec"
+
+  # Every consuming repository inherits default.json, so an invalid preset breaks
+  # their updates. The flake check runs Renovate's own validator on it.
+  renovate:
+    name: Renovate preset
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: DeterminateSystems/determinate-nix-action@v3
+      - name: Validate the Renovate preset
+        run: nix build --no-link ".#checks.$(nix eval --raw --impure --expr builtins.currentSystem).renovate"
