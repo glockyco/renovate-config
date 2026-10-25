@@ -18,7 +18,7 @@ The preset does not install or enable Renovate. Once Renovate is enabled, it use
 
 ## Development
 
-Edit [default.json](default.json) to change the shared policy. [CI](.github/workflows/ci.yml) checks the repository's [OpenSpec artifacts](openspec/changes), not the Renovate preset. With Nix on a platform supported by [flake.nix](flake.nix), run that check locally with:
+Edit [default.json](default.json) to change the shared policy. [CI](.github/workflows/ci.yml) validates the preset with Renovate's own validator and checks the repository's [OpenSpec artifacts](openspec/changes). With Nix on a platform supported by [flake.nix](flake.nix), run both checks locally with:
 
 ```sh
 nix flake check
