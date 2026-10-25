@@ -1,13 +1,16 @@
 schema: spec-driven
 
 context: |
-  This repository publishes the shared Renovate preset for Oh My Pi repositories.
+  This repository publishes the shared Renovate preset for glockyco repositories.
   Each consuming repository owns its toolchain and updater choices.
-  This preset owns reusable Renovate defaults only: generic safety, scheduling,
-  dependency dashboard behavior, pull request concurrency, manual merge policy,
-  and lock file maintenance.
-  Consuming repositories own project-specific managers, update grouping, labels,
-  release age, security handling, and toolchain updater configuration.
+  This preset owns generic safety, scheduling, dashboard, concurrency, manual
+  merge, lock file maintenance, and one routine minor and patch group.
+  Upstream release coupling, including the SvelteKit source repository, is shared
+  like Renovate's monorepo groups. Keep major and minor branches separate.
+  Consumer package rules follow shared rules and override shared group names.
+  Consumers own project-specific managers, compatibility groups, labels,
+  release age, version bounds, security handling, and toolchain updaters.
+  Do not set a shared rebase override.
   Use clean cutovers. Do not add compatibility presets or fallback lock files.
 
 rules:

@@ -17,6 +17,11 @@
       "description": "Collect routine minor and patch updates into one PR per run. Repositories list their own groups after this preset, so those groups keep their own PRs.",
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "non-major dependencies"
+    },
+    {
+      "description": "SvelteKit packages release from one repository. Adapter majors require the matching Kit major, but Renovate's monorepo list does not cover them.",
+      "matchSourceUrls": ["https://github.com/sveltejs/kit"],
+      "groupName": "SvelteKit"
     }
   ]
 }

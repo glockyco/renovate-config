@@ -41,6 +41,8 @@
         renovate = pkgs.runCommand "renovate-preset" { nativeBuildInputs = [ pkgs.renovate ]; } ''
           export HOME="$TMPDIR"
           renovate-config-validator --strict --no-global ${./default.json}
+          ${pkgs.nodejs_24}/bin/node ${./tests/policy.mjs} \
+            ${pkgs.renovate}/lib/node_modules/renovate ${./default.json}
           touch "$out"
         '';
       });
