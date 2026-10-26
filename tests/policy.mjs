@@ -19,6 +19,33 @@ function apply(dependency, localRules = []) {
   });
 }
 
+test('lock file maintenance delegates inherited release age to package managers', async () => {
+  const result = await apply({ updateType: 'lockFileMaintenance', minimumReleaseAge: '3 days' });
+  assert.equal(result.minimumReleaseAge, null);
+  assert.equal(preset.lockFileMaintenance.enabled, true);
+});
+
+for (const updateType of ['major', 'minor', 'patch', 'pin', 'digest', 'pinDigest', 'lockfileUpdate', 'rollback', 'bump', 'replacement']) {
+  test(`${updateType} updates retain the consumer release-age policy`, async () => {
+    const result = await apply({ packageName: 'unrelated-package', updateType, minimumReleaseAge: '3 days' });
+    assert.equal(result.minimumReleaseAge, '3 days');
+  });
+}
+
+test('consumer manager rules can disable unsupported maintenance without disabling other managers', async () => {
+  const localRules = [{
+    matchManagers: ['composer'],
+    matchUpdateTypes: ['lockFileMaintenance'],
+    enabled: false,
+  }];
+  const unsupported = await apply({ manager: 'composer', updateType: 'lockFileMaintenance' }, localRules);
+  assert.equal(unsupported.enabled, false);
+  const supported = await apply({ manager: 'npm', updateType: 'lockFileMaintenance' }, localRules);
+  assert.notEqual(supported.enabled, false);
+  const ordinary = await apply({ manager: 'composer', updateType: 'patch' }, localRules);
+  assert.notEqual(ordinary.enabled, false);
+});
+
 for (const updateType of ['minor', 'patch']) {
   test(`${updateType} updates retain the routine group`, async () => {
     const result = await apply({ packageName: 'unrelated-package', updateType });

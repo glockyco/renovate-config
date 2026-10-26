@@ -65,7 +65,7 @@ The shared preset MUST NOT set an explicit `rebaseWhen` mode.
 
 ### Requirement: Consumers own project policy
 
-The shared preset MUST NOT define project-specific managers, toolchain updaters, compatibility groups, labels, release age, version restrictions, or security handling. Consumer package rules MUST retain precedence over shared group assignments.
+The shared preset MUST NOT define project-specific managers, toolchain updaters, compatibility groups, labels, ordinary dependency release age, version restrictions, or security handling. Consumer package rules MUST retain precedence over shared group assignments.
 
 #### Scenario: A consumer defines a dedicated group
 
@@ -77,6 +77,24 @@ The shared preset MUST NOT define project-specific managers, toolchain updaters,
 
 - **WHEN** a consumer disables a manager or dependency because a dedicated updater owns it
 - **THEN** the shared preset does not add a competing updater rule
+
+### Requirement: Package managers enforce maintenance release age
+
+The shared preset MUST clear `minimumReleaseAge` only for `lockFileMaintenance` with a package rule whose description explains that package managers enforce release age. Renovate cannot enforce release age for this update type. Consumers MUST configure their package managers to enforce their release-age policy or disable maintenance only for unsupported managers with a documented local package rule.
+
+#### Scenario: A consumer configures a release-age policy
+
+- **WHEN** Renovate applies the shared rules to lock file maintenance with an inherited minimum release age
+- **THEN** the maintenance update has `minimumReleaseAge` set to null
+- **AND** ordinary dependency updates retain the consumer's minimum release age
+- **AND** the shared preset keeps scheduled lock file maintenance enabled
+
+#### Scenario: A consumer uses a manager without an age gate
+
+- **WHEN** a consumer disables lock file maintenance with a local rule matching only an unsupported manager and that update type
+- **THEN** maintenance for supported managers remains enabled
+- **AND** ordinary updates for the unsupported manager remain enabled
+
 
 ### Requirement: Shared policy has one canonical preset
 
