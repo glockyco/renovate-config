@@ -14,6 +14,11 @@
   },
   "packageRules": [
     {
+      "description": "Package managers enforce release age during lock file maintenance because Renovate cannot age the resolved dependencies.",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "minimumReleaseAge": null
+    },
+    {
       "description": "Collect routine minor and patch updates into one PR per run. Repositories list their own groups after this preset, so those groups keep their own PRs.",
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "non-major dependencies"
