@@ -8,6 +8,7 @@
   "automerge": false,
   "prConcurrentLimit": 5,
   "prHourlyLimit": 2,
+  "minimumReleaseAge": "3 days",
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": ["* * * * 6"]
@@ -22,6 +23,11 @@
       "description": "Collect routine minor and patch updates into one PR per run. Repositories list their own groups after this preset, so those groups keep their own PRs.",
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "non-major dependencies"
+    },
+    {
+      "description": "Routine updates merge themselves once required checks pass and the release is three days old. Majors still wait for a person or a session.",
+      "matchUpdateTypes": ["minor", "patch", "lockFileMaintenance"],
+      "automerge": true
     },
     {
       "description": "SvelteKit packages release from one repository. Adapter majors require the matching Kit major, but Renovate's monorepo list does not cover them.",
