@@ -83,3 +83,26 @@ test('consumer compatibility groups override both shared groups', async () => {
   const unrelated = await apply({ packageName: 'unrelated-package', updateType: 'patch' }, localRules);
   assert.equal(unrelated.groupName, 'non-major dependencies');
 });
+
+test('ordinary updates wait three days by default', () => {
+  assert.equal(preset.minimumReleaseAge, '3 days');
+  assert.equal(preset.automerge, false);
+});
+
+for (const updateType of ['minor', 'patch', 'lockFileMaintenance']) {
+  test(`${updateType} updates merge themselves`, async () => {
+    const result = await apply({ packageName: 'unrelated-package', updateType });
+    assert.equal(result.automerge, true);
+  });
+}
+
+test('majors still wait for review', async () => {
+  const result = await apply({ packageName: 'unrelated-package', updateType: 'major' });
+  assert.notEqual(result.automerge, true);
+});
+
+test('a consumer rule can keep its updates review-only', async () => {
+  const localRules = [{ matchUpdateTypes: ['minor', 'patch', 'lockFileMaintenance'], automerge: false }];
+  const result = await apply({ packageName: 'unrelated-package', updateType: 'patch' }, localRules);
+  assert.equal(result.automerge, false);
+});

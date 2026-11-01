@@ -7,7 +7,7 @@ Defines inherited Renovate defaults that reduce routine review noise while prese
 
 ### Requirement: Shared policy keeps generic defaults
 
-The shared preset MUST extend `config:recommended` and MUST preserve its generic timezone, routine schedule, dashboard, concurrency, manual merge, and lock file maintenance settings.
+The shared preset MUST extend `config:recommended` and MUST preserve its generic timezone, routine schedule, dashboard, concurrency and lock file maintenance settings.
 
 #### Scenario: Consumer loads the shared preset
 
@@ -15,7 +15,6 @@ The shared preset MUST extend `config:recommended` and MUST preserve its generic
 - **THEN** Renovate applies its recommended baseline and the preset's timezone and schedule
 - **AND** the dependency dashboard and scheduled lock file maintenance are enabled
 - **AND** pull requests are limited to 5 concurrent and 2 hourly requests
-- **AND** automerge is disabled
 
 ### Requirement: Shared policy groups routine updates
 
@@ -65,7 +64,7 @@ The shared preset MUST NOT set an explicit `rebaseWhen` mode.
 
 ### Requirement: Consumers own project policy
 
-The shared preset MUST NOT define project-specific managers, toolchain updaters, compatibility groups, labels, ordinary dependency release age, version restrictions, or security handling. Consumer package rules MUST retain precedence over shared group assignments.
+The shared preset MUST NOT define project-specific managers, toolchain updaters, compatibility groups, labels, version restrictions, or security handling. Consumer package rules MUST retain precedence over shared group assignments.
 
 #### Scenario: A consumer defines a dedicated group
 
@@ -95,7 +94,6 @@ The shared preset MUST clear `minimumReleaseAge` only for `lockFileMaintenance` 
 - **THEN** maintenance for supported managers remains enabled
 - **AND** ordinary updates for the unsupported manager remain enabled
 
-
 ### Requirement: Shared policy has one canonical preset
 
 The shared policy MUST use the canonical preset without compatibility aliases, fallback presets, or secondary lock files.
@@ -104,3 +102,22 @@ The shared policy MUST use the canonical preset without compatibility aliases, f
 
 - **WHEN** a consumer resolves the canonical shared preset
 - **THEN** it receives the generic defaults and ordered grouping rules without choosing a compatibility preset
+
+### Requirement: Routine updates merge themselves
+
+The shared preset MUST set a three-day `minimumReleaseAge` for ordinary updates and MUST automerge minor, patch and lock file maintenance updates. Major updates MUST NOT automerge. A consumer package rule that sets `automerge` to false MUST take precedence.
+
+#### Scenario: A patch update passes its checks
+
+- **WHEN** a patch release is three days old and the pull request's required checks pass
+- **THEN** the update merges without a person
+
+#### Scenario: A major update is proposed
+
+- **WHEN** Renovate proposes a major update
+- **THEN** it waits for review
+
+#### Scenario: A repository keeps updates review-only
+
+- **WHEN** a consumer rule sets `automerge` to false for routine updates
+- **THEN** those updates wait for review

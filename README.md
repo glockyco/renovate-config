@@ -16,9 +16,11 @@ Renovate resolves this preset to [default.json](default.json), the source for sc
 
 The preset does not install or enable Renovate. Once Renovate is enabled, it uses the inherited policy to open dependency update pull requests. Changes to this shared preset affect every repository that references it.
 
-## Release age
+## Release age and automerge
 
-Configure a release-age gate in each package manager used for lock file maintenance because Renovate cannot enforce its age checks on those updates. The preset clears Renovate's age setting only for lock file maintenance. Ordinary dependency updates retain the repository's Renovate age policy. See [Renovate's release-age guidance](https://docs.renovatebot.com/key-concepts/minimum-release-age/).
+Renovate proposes a release only once it is three days old. Minor, patch and lock file maintenance updates then merge themselves when the repository's required checks pass, and majors wait for review. Turn on "Allow auto-merge" in the repository's settings, so GitHub merges as soon as the checks pass. A repository that must review every update, for example because a change needs acceptance on a workstation, sets `"automerge": false` in a local package rule.
+
+Configure the same three-day gate in each package manager used for lock file maintenance, because Renovate cannot age what a lockfile refresh resolves. The preset clears Renovate's age setting only for lock file maintenance. See [Renovate's release-age guidance](https://docs.renovatebot.com/key-concepts/minimum-release-age/).
 
 If a manager cannot enforce the repository's release-age policy, disable lock file maintenance for that manager in a local package rule and explain why in its description:
 
